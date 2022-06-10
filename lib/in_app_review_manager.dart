@@ -113,20 +113,22 @@ class InAppReviewManager {
         return;
       }
     }
+    // _showDialog can only be called if inAppReview.isAvailable() returned true
 
-    if (await inAppReview.isAvailable()) {
-      inAppReview.requestReview();
-    }
+    inAppReview.requestReview();
+
     _setRemindTimestamp();
   }
 
   // Checkers
 
   Future<bool> _shouldShowRateDialog() async {
+    final InAppReview inAppReview = InAppReview.instance;
     return await _isOverLaunchTimes() &&
         await _isOverInstallDate() &&
         await _isOverRemindDate() &&
-        await _isNotIgnored();
+        await _isNotIgnored() &&
+        await inAppReview.isAvailable();
   }
 
   Future<bool> _isOverLaunchTimes() async {
