@@ -82,7 +82,7 @@ class InAppReviewManager {
   }) async {
     final InAppReview inAppReview = InAppReview.instance;
 
-    if (context != null && Platform.isAndroid) {
+    if (context != null) {
       final popValue = await showDialog<_IntermediateDialogState>(
         context: context,
         builder: (dialogContext) => AlertDialog(
