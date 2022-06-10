@@ -5,8 +5,23 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 class AdvancedInAppReview with WidgetsBindingObserver {
+  final String rateNowButtonText;
+  final String laterButtonText;
+  final String ignoreButtonText;
+  final String intermediateDialogTitle;
+  final String intermediateDialogDescription;
+
+  AdvancedInAppReview({
+    required this.rateNowButtonText,
+    required this.laterButtonText,
+    required this.ignoreButtonText,
+    required this.intermediateDialogDescription,
+    required this.intermediateDialogTitle,
+  });
+
   static const MethodChannel _channel = MethodChannel('advanced_in_app_review');
   final InAppReviewManager _manager = InAppReviewManager();
+  BuildContext? _context;
 
   static Future<String?> get platformVersion async {
     final String? version = await _channel.invokeMethod('getPlatformVersion');
@@ -14,7 +29,8 @@ class AdvancedInAppReview with WidgetsBindingObserver {
   }
 
   /// Start monitoring conditions to decide wheter a view attemp is made or not
-  void monitor() {
+  void monitor(BuildContext context) {
+    _context = context;
     _manager.monitor();
     _startObserver();
   }
@@ -51,7 +67,14 @@ class AdvancedInAppReview with WidgetsBindingObserver {
 
   void _afterLaunch() {
     _manager.applicationWasLaunched();
-    _manager.showRateDialogIfMeetsConditions();
+    _manager.showRateDialogIfMeetsConditions(
+      _context,
+      rateNowButtonText: rateNowButtonText,
+      laterButtonText: laterButtonText,
+      ignoreButtonText: ignoreButtonText,
+      intermediateDialogTitle: intermediateDialogTitle,
+      intermediateDialogDescription: intermediateDialogDescription,
+    );
   }
 
   /// This allows a value of type T or T?

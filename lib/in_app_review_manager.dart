@@ -1,16 +1,19 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+enum _IntermediateDialogState { rate, later, ignore }
 
 class InAppReviewManager {
   static final InAppReviewManager _singleton = InAppReviewManager._internal();
   InAppReviewManager._internal();
 
-  static const String _prefKeyInstallDate =
-      "advanced_in_app_review_install_date";
-  static const String _prefKeyLaunchTimes =
-      "advanced_in_app_review_launch_times";
-  static const String _prefKeyRemindInterval =
-      "advanced_in_app_remind_interval";
+  static const String _prefKeyInstallDate = "advanced_in_app_review_install_date";
+  static const String _prefKeyLaunchTimes = "advanced_in_app_review_launch_times";
+  static const String _prefKeyRemindInterval = "advanced_in_app_remind_interval";
+  static const String _prefKeyIsIgnored = "advanced_in_app_remind_is_ignored";
 
   static int _minLaunchTimes = 2;
   static int _minDaysAfterInstall = 2;
@@ -30,10 +33,25 @@ class InAppReviewManager {
     _setLaunchTimes(await _getLaunchTimes() + 1);
   }
 
-  Future<bool> showRateDialogIfMeetsConditions() async {
+  Future<bool> showRateDialogIfMeetsConditions(
+    BuildContext? context, {
+    required String rateNowButtonText,
+    required String laterButtonText,
+    required String ignoreButtonText,
+    required String intermediateDialogTitle,
+    required String intermediateDialogDescription,
+  }) async {
     bool isMeetsConditions = await _shouldShowRateDialog();
+
     if (isMeetsConditions) {
-      _showDialog();
+      _showDialog(
+        context,
+        rateNowButtonText: rateNowButtonText,
+        laterButtonText: laterButtonText,
+        ignoreButtonText: ignoreButtonText,
+        intermediateDialogTitle: intermediateDialogTitle,
+        intermediateDialogDescription: intermediateDialogDescription,
+      );
     }
     return isMeetsConditions;
   }
@@ -54,8 +72,49 @@ class InAppReviewManager {
 
   // Dialog
 
-  void _showDialog() async {
+  void _showDialog(
+    BuildContext? context, {
+    required String rateNowButtonText,
+    required String laterButtonText,
+    required String ignoreButtonText,
+    required String intermediateDialogTitle,
+    required String intermediateDialogDescription,
+  }) async {
     final InAppReview inAppReview = InAppReview.instance;
+
+    if (context != null && Platform.isAndroid) {
+      final popValue = await showDialog<_IntermediateDialogState>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: Text(intermediateDialogTitle),
+          content: Text(intermediateDialogDescription),
+          actionsOverflowAlignment: OverflowBarAlignment.center,
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(_IntermediateDialogState.rate),
+              child: Text(rateNowButtonText),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(_IntermediateDialogState.later),
+              child: Text(laterButtonText),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(_IntermediateDialogState.ignore),
+              child: Text(ignoreButtonText),
+            ),
+          ],
+        ),
+      );
+
+      // if popValue is _IntermediateDialogState.rate, resume function normally
+      if (popValue == null || popValue == _IntermediateDialogState.later) {
+        return;
+      } else if (popValue == _IntermediateDialogState.ignore) {
+        await _setIsIgnored(true);
+        return;
+      }
+    }
+
     if (await inAppReview.isAvailable()) {
       inAppReview.requestReview();
     }
@@ -67,7 +126,8 @@ class InAppReviewManager {
   Future<bool> _shouldShowRateDialog() async {
     return await _isOverLaunchTimes() &&
         await _isOverInstallDate() &&
-        await _isOverRemindDate();
+        await _isOverRemindDate() &&
+        await _isNotIgnored();
   }
 
   Future<bool> _isOverLaunchTimes() async {
@@ -76,22 +136,24 @@ class InAppReviewManager {
   }
 
   Future<bool> _isOverInstallDate() async {
-    bool overInstallDate =
-        await _isOverDate(await _getInstallTimestamp(), _minDaysAfterInstall);
+    bool overInstallDate = await _isOverDate(await _getInstallTimestamp(), _minDaysAfterInstall);
     return overInstallDate;
   }
 
   Future<bool> _isOverRemindDate() async {
-    bool overRemindDate =
-        await _isOverDate(await _getRemindTimestamp(), _minDaysBeforeRemind);
+    bool overRemindDate = await _isOverDate(await _getRemindTimestamp(), _minDaysBeforeRemind);
     return overRemindDate;
+  }
+
+  Future<bool> _isNotIgnored() async {
+    bool isIgnored = await _getIsIgnored();
+    return !isIgnored;
   }
 
   // Helpers
 
   Future<bool> _isOverDate(int targetDate, int threshold) async {
-    return DateTime.now().millisecondsSinceEpoch - targetDate >=
-        threshold * 24 * 60 * 60 * 1000;
+    return DateTime.now().millisecondsSinceEpoch - targetDate >= threshold * 24 * 60 * 60 * 1000;
   }
 
   // Shared Preference Values
@@ -144,5 +206,17 @@ class InAppReviewManager {
     final prefs = await SharedPreferences.getInstance();
     prefs.remove(_prefKeyRemindInterval);
     prefs.setInt(_prefKeyRemindInterval, DateTime.now().millisecondsSinceEpoch);
+  }
+
+  Future<bool> _getIsIgnored() async {
+    final prefs = await SharedPreferences.getInstance();
+    final bool? isIgnored = prefs.getBool(_prefKeyIsIgnored);
+    return isIgnored ?? false;
+  }
+
+  Future<void> _setIsIgnored(bool isIgnored) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove(_prefKeyIsIgnored);
+    prefs.setBool(_prefKeyIsIgnored, isIgnored);
   }
 }
