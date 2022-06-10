@@ -88,19 +88,18 @@ class InAppReviewManager {
         builder: (dialogContext) => AlertDialog(
           title: Text(intermediateDialogTitle),
           content: Text(intermediateDialogDescription),
-          actionsOverflowAlignment: OverflowBarAlignment.center,
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(_IntermediateDialogState.rate),
-              child: Text(rateNowButtonText),
+              onPressed: () => Navigator.of(dialogContext).pop(_IntermediateDialogState.ignore),
+              child: Text(ignoreButtonText),
             ),
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(_IntermediateDialogState.later),
               child: Text(laterButtonText),
             ),
             TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(_IntermediateDialogState.ignore),
-              child: Text(ignoreButtonText),
+              onPressed: () => Navigator.of(dialogContext).pop(_IntermediateDialogState.rate),
+              child: Text(rateNowButtonText),
             ),
           ],
         ),
