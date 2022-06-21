@@ -107,6 +107,7 @@ class InAppReviewManager {
 
       // if popValue is _IntermediateDialogState.rate, resume function normally
       if (popValue == null || popValue == _IntermediateDialogState.later) {
+        _setRemindTimestamp();
         return;
       } else if (popValue == _IntermediateDialogState.ignore) {
         await _setIsIgnored(true);
