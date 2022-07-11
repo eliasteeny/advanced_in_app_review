@@ -23,6 +23,8 @@ class InAppReviewManager {
     return _singleton;
   }
 
+  bool _isIntermediateDialogInProgress = false;
+
   void monitor() async {
     if (await _isFirstLaunch() == true) {
       _setInstallDate();
@@ -83,6 +85,7 @@ class InAppReviewManager {
     final InAppReview inAppReview = InAppReview.instance;
 
     if (context != null) {
+      _isIntermediateDialogInProgress = true;
       final popValue = await showDialog<_IntermediateDialogState>(
         context: context,
         builder: (dialogContext) => AlertDialog(
@@ -104,6 +107,8 @@ class InAppReviewManager {
           ],
         ),
       );
+
+      _isIntermediateDialogInProgress = false;
 
       // if popValue is _IntermediateDialogState.rate, resume function normally
       if (popValue == null || popValue == _IntermediateDialogState.later) {
@@ -129,7 +134,8 @@ class InAppReviewManager {
         await _isOverInstallDate() &&
         await _isOverRemindDate() &&
         await _isNotIgnored() &&
-        await inAppReview.isAvailable();
+        await inAppReview.isAvailable() &&
+        !_isIntermediateDialogInProgress;
   }
 
   Future<bool> _isOverLaunchTimes() async {
