@@ -8,6 +8,7 @@ enum _IntermediateDialogState { rate, later, ignore }
 
 class InAppReviewManager {
   static final InAppReviewManager _singleton = InAppReviewManager._internal();
+
   InAppReviewManager._internal();
 
   static const String _prefKeyInstallDate = "advanced_in_app_review_install_date";
@@ -18,6 +19,7 @@ class InAppReviewManager {
   static int _minLaunchTimes = 2;
   static int _minDaysAfterInstall = 2;
   static int _minDaysBeforeRemind = 1;
+  static int _minSecondsBeforeShowDialog = 1;
 
   factory InAppReviewManager() {
     return _singleton;
@@ -46,14 +48,16 @@ class InAppReviewManager {
     bool isMeetsConditions = await _shouldShowRateDialog();
 
     if (isMeetsConditions) {
-      _showDialog(
-        context,
-        rateNowButtonText: rateNowButtonText,
-        laterButtonText: laterButtonText,
-        ignoreButtonText: ignoreButtonText,
-        intermediateDialogTitle: intermediateDialogTitle,
-        intermediateDialogDescription: intermediateDialogDescription,
-      );
+      Future.delayed(Duration(seconds: _minSecondsBeforeShowDialog), () {
+        _showDialog(
+          context,
+          rateNowButtonText: rateNowButtonText,
+          laterButtonText: laterButtonText,
+          ignoreButtonText: ignoreButtonText,
+          intermediateDialogTitle: intermediateDialogTitle,
+          intermediateDialogDescription: intermediateDialogDescription,
+        );
+      });
     }
     return isMeetsConditions;
   }
@@ -70,6 +74,10 @@ class InAppReviewManager {
 
   void setMinDaysBeforeRemind(int days) {
     _minDaysBeforeRemind = days;
+  }
+
+  void setMinSecondsBeforeShowDialog(int seconds) {
+    _minSecondsBeforeShowDialog = seconds;
   }
 
   // Dialog

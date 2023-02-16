@@ -1,3 +1,15 @@
+## 1.1.3
+
+* set kotlin-gradle-plugin version back to 1.7.20 as it may cause compilation errors.
+
+## 1.1.2
+
+* feature setMinSecondsBeforeShowDialog added.
+
+## 1.1.1
+
+* kotlin-gradle-plugin version upgraded to 1.7.20.
+
 ## 1.1.0
 
 * support for Flutter 3.0
