@@ -5,7 +5,16 @@ import 'package:flutter/services.dart';
 import 'package:advanced_in_app_review/advanced_in_app_review.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(_MaterialWrapper());
+}
+
+class _MaterialWrapper extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(
+      home: MyApp(),
+    );
+  }
 }
 
 class MyApp extends StatefulWidget {
@@ -22,12 +31,13 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     initPlatformState();
-    AdvancedInAppReview()
-        .setMinDaysBeforeRemind(7)
-        .setMinDaysAfterInstall(2)
-        .setMinLaunchTimes(2)
-        .setMinSecondsBeforeShowDialog(4)
-        .monitor();
+    AdvancedInAppReview(
+      rateNowButtonText: 'Rate now',
+      laterButtonText: 'Later',
+      ignoreButtonText: 'Ignore',
+      intermediateDialogDescription: 'intermediateDialogDescription',
+      intermediateDialogTitle: 'intermediateDialogTitle',
+    ).setMinDaysBeforeRemind(7).setMinSecondsBeforeShowDialog(4).setMinDaysAfterInstall(0).monitor(context);
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -53,14 +63,12 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Plugin example app'),
+      ),
+      body: Center(
+        child: Text('Running on: $_platformVersion\n'),
       ),
     );
   }
