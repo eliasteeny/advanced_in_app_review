@@ -14,8 +14,8 @@ class AdvancedInAppReview with WidgetsBindingObserver {
   AdvancedInAppReview({
     required this.rateNowButtonText,
     required this.ignoreButtonText,
-    required this.intermediateDialogContent,
-    required this.intermediateDialogTitle,
+    this.intermediateDialogContent,
+    this.intermediateDialogTitle,
     this.laterButtonText,
   });
 
