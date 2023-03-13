@@ -39,8 +39,8 @@ class InAppReviewManager {
     BuildContext? context, {
     required String rateNowButtonText,
     required String ignoreButtonText,
-    required String intermediateDialogTitle,
-    required String intermediateDialogDescription,
+    required Widget? intermediateDialogTitle,
+    required Widget? intermediateDialogContent,
     required String? laterButtonText,
   }) async {
     bool isMeetsConditions = await _shouldShowRateDialog();
@@ -53,7 +53,7 @@ class InAppReviewManager {
           laterButtonText: laterButtonText,
           ignoreButtonText: ignoreButtonText,
           intermediateDialogTitle: intermediateDialogTitle,
-          intermediateDialogDescription: intermediateDialogDescription,
+          intermediateDialogContent: intermediateDialogContent,
         );
       });
     }
@@ -84,8 +84,8 @@ class InAppReviewManager {
     BuildContext? context, {
     required String rateNowButtonText,
     required String ignoreButtonText,
-    required String intermediateDialogTitle,
-    required String intermediateDialogDescription,
+    required Widget? intermediateDialogTitle,
+    required Widget? intermediateDialogContent,
     required String? laterButtonText,
   }) async {
     final InAppReview inAppReview = InAppReview.instance;
@@ -95,8 +95,8 @@ class InAppReviewManager {
       final popValue = await showDialog<_IntermediateDialogState>(
         context: context,
         builder: (dialogContext) => AlertDialog(
-          title: Text(intermediateDialogTitle),
-          content: Text(intermediateDialogDescription),
+          title: intermediateDialogTitle,
+          content: intermediateDialogContent,
           actions: [
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(_IntermediateDialogState.ignore),

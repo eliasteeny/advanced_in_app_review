@@ -35,8 +35,8 @@ class _MyAppState extends State<MyApp> {
       rateNowButtonText: 'Rate now',
       laterButtonText: 'Later',
       ignoreButtonText: 'Ignore',
-      intermediateDialogDescription: 'intermediateDialogDescription',
-      intermediateDialogTitle: 'intermediateDialogTitle',
+      intermediateDialogContent: const Text('intermediateDialogDescription'),
+      intermediateDialogTitle: const Text('intermediateDialogTitle'),
     ).setMinDaysBeforeRemind(7).setMinSecondsBeforeShowDialog(4).setMinDaysAfterInstall(0).monitor(context);
   }
 

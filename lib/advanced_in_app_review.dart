@@ -8,13 +8,13 @@ class AdvancedInAppReview with WidgetsBindingObserver {
   final String rateNowButtonText;
   final String? laterButtonText;
   final String ignoreButtonText;
-  final String intermediateDialogTitle;
-  final String intermediateDialogDescription;
+  final Widget? intermediateDialogTitle;
+  final Widget? intermediateDialogContent;
 
   AdvancedInAppReview({
     required this.rateNowButtonText,
     required this.ignoreButtonText,
-    required this.intermediateDialogDescription,
+    required this.intermediateDialogContent,
     required this.intermediateDialogTitle,
     this.laterButtonText,
   });
@@ -79,7 +79,7 @@ class AdvancedInAppReview with WidgetsBindingObserver {
       rateNowButtonText: rateNowButtonText,
       ignoreButtonText: ignoreButtonText,
       intermediateDialogTitle: intermediateDialogTitle,
-      intermediateDialogDescription: intermediateDialogDescription,
+      intermediateDialogContent: intermediateDialogContent,
       laterButtonText: laterButtonText,
     );
   }
