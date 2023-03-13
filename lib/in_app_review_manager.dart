@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -40,10 +38,10 @@ class InAppReviewManager {
   Future<bool> showRateDialogIfMeetsConditions(
     BuildContext? context, {
     required String rateNowButtonText,
-    required String laterButtonText,
     required String ignoreButtonText,
     required String intermediateDialogTitle,
     required String intermediateDialogDescription,
+    required String? laterButtonText,
   }) async {
     bool isMeetsConditions = await _shouldShowRateDialog();
 
@@ -85,10 +83,10 @@ class InAppReviewManager {
   void _showDialog(
     BuildContext? context, {
     required String rateNowButtonText,
-    required String laterButtonText,
     required String ignoreButtonText,
     required String intermediateDialogTitle,
     required String intermediateDialogDescription,
+    required String? laterButtonText,
   }) async {
     final InAppReview inAppReview = InAppReview.instance;
 
@@ -104,10 +102,11 @@ class InAppReviewManager {
               onPressed: () => Navigator.of(dialogContext).pop(_IntermediateDialogState.ignore),
               child: Text(ignoreButtonText),
             ),
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(_IntermediateDialogState.later),
-              child: Text(laterButtonText),
-            ),
+            if (laterButtonText != null)
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(_IntermediateDialogState.later),
+                child: Text(laterButtonText),
+              ),
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(_IntermediateDialogState.rate),
               child: Text(rateNowButtonText),

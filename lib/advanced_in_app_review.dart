@@ -6,17 +6,17 @@ import 'package:flutter/widgets.dart';
 
 class AdvancedInAppReview with WidgetsBindingObserver {
   final String rateNowButtonText;
-  final String laterButtonText;
+  final String? laterButtonText;
   final String ignoreButtonText;
   final String intermediateDialogTitle;
   final String intermediateDialogDescription;
 
   AdvancedInAppReview({
     required this.rateNowButtonText,
-    required this.laterButtonText,
     required this.ignoreButtonText,
     required this.intermediateDialogDescription,
     required this.intermediateDialogTitle,
+    this.laterButtonText,
   });
 
   static const MethodChannel _channel = MethodChannel('advanced_in_app_review');
@@ -28,26 +28,26 @@ class AdvancedInAppReview with WidgetsBindingObserver {
     return version;
   }
 
-  /// Start monitoring conditions to decide wheter a view attemp is made or not
+  /// Start monitoring conditions to decide whether a view attempt is made or not
   void monitor(BuildContext context) {
     _context = context;
     _manager.monitor();
     _startObserver();
   }
 
-  /// Number of times of opening the app before a view attemp is made
+  /// Number of times of opening the app before a view attempt is made
   AdvancedInAppReview setMinLaunchTimes(int launchTimes) {
     _manager.setMinLaunchTimes(launchTimes);
     return this;
   }
 
-  /// Minimum number of days to wait after install before a view attemp is made
+  /// Minimum number of days to wait after install before a view attempt is made
   AdvancedInAppReview setMinDaysAfterInstall(int days) {
     _manager.setMinDaysAfterInstall(days);
     return this;
   }
 
-  /// Minimum number of days after a view attemp was made to try again
+  /// Minimum number of days after a view attempt was made to try again
   AdvancedInAppReview setMinDaysBeforeRemind(int days) {
     _manager.setMinDaysBeforeRemind(days);
     return this;
@@ -77,10 +77,10 @@ class AdvancedInAppReview with WidgetsBindingObserver {
     _manager.showRateDialogIfMeetsConditions(
       _context,
       rateNowButtonText: rateNowButtonText,
-      laterButtonText: laterButtonText,
       ignoreButtonText: ignoreButtonText,
       intermediateDialogTitle: intermediateDialogTitle,
       intermediateDialogDescription: intermediateDialogDescription,
+      laterButtonText: laterButtonText,
     );
   }
 
