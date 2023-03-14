@@ -94,6 +94,7 @@ class InAppReviewManager {
         builder: (dialogContext) => AlertDialog(
           title: intermediateDialogTitle,
           content: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               if (intermediateDialogContent != null) intermediateDialogContent,
               const SizedBox(height: 32),
