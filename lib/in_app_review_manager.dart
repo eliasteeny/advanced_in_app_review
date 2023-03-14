@@ -111,12 +111,13 @@ class InAppReviewManager {
                         Navigator.of(dialogContext).pop(_IntermediateDialogState.ignore);
                       },
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 32),
+                        padding: const EdgeInsets.symmetric(vertical: 24),
                         child: Text(
                           ignoreButtonText,
                           style: const TextStyle(
                             color: Colors.blue,
-                            fontSize: 20,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
@@ -135,12 +136,13 @@ class InAppReviewManager {
                         Navigator.of(dialogContext).pop(_IntermediateDialogState.rate);
                       },
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 32),
+                        padding: const EdgeInsets.symmetric(vertical: 24),
                         child: Text(
                           rateNowButtonText,
                           style: const TextStyle(
                             color: Colors.green,
-                            fontSize: 20,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
