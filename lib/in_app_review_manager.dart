@@ -77,7 +77,6 @@ class InAppReviewManager {
   }
 
   // Dialog
-
   void _showDialog(
     BuildContext? context, {
     required String rateNowButtonText,
@@ -102,29 +101,53 @@ class InAppReviewManager {
                 children: [
                   Expanded(
                     child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(
+                          color: Colors.blue,
+                          width: 3,
+                        ),
+                      ),
                       onPressed: () {
                         Navigator.of(dialogContext).pop(_IntermediateDialogState.ignore);
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 32),
-                        child: Text(ignoreButtonText),
+                        child: Text(
+                          ignoreButtonText,
+                          style: const TextStyle(
+                            color: Colors.blue,
+                            fontSize: 20,
+                          ),
+                        ),
                       ),
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(
+                          color: Colors.green,
+                          width: 3,
+                        ),
+                      ),
                       onPressed: () {
                         Navigator.of(dialogContext).pop(_IntermediateDialogState.rate);
                       },
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 32),
-                        child: Text(rateNowButtonText),
+                        child: Text(
+                          rateNowButtonText,
+                          style: const TextStyle(
+                            color: Colors.green,
+                            fontSize: 20,
+                          ),
+                        ),
                       ),
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),
