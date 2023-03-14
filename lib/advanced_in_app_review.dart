@@ -6,7 +6,6 @@ import 'package:flutter/widgets.dart';
 
 class AdvancedInAppReview with WidgetsBindingObserver {
   final String rateNowButtonText;
-  final String? laterButtonText;
   final String ignoreButtonText;
   final Widget? intermediateDialogTitle;
   final Widget? intermediateDialogContent;
@@ -16,7 +15,6 @@ class AdvancedInAppReview with WidgetsBindingObserver {
     required this.ignoreButtonText,
     this.intermediateDialogContent,
     this.intermediateDialogTitle,
-    this.laterButtonText,
   });
 
   static const MethodChannel _channel = MethodChannel('advanced_in_app_review');
@@ -80,7 +78,6 @@ class AdvancedInAppReview with WidgetsBindingObserver {
       ignoreButtonText: ignoreButtonText,
       intermediateDialogTitle: intermediateDialogTitle,
       intermediateDialogContent: intermediateDialogContent,
-      laterButtonText: laterButtonText,
     );
   }
 

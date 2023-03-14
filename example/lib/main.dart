@@ -33,7 +33,6 @@ class _MyAppState extends State<MyApp> {
     initPlatformState();
     AdvancedInAppReview(
       rateNowButtonText: 'Rate now',
-      laterButtonText: 'Later',
       ignoreButtonText: 'Ignore',
       intermediateDialogContent: const Text('intermediateDialogDescription'),
       intermediateDialogTitle: const Text('intermediateDialogTitle'),

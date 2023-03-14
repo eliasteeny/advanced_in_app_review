@@ -41,7 +41,6 @@ class InAppReviewManager {
     required String ignoreButtonText,
     required Widget? intermediateDialogTitle,
     required Widget? intermediateDialogContent,
-    required String? laterButtonText,
   }) async {
     bool isMeetsConditions = await _shouldShowRateDialog();
 
@@ -50,7 +49,6 @@ class InAppReviewManager {
         _showDialog(
           context,
           rateNowButtonText: rateNowButtonText,
-          laterButtonText: laterButtonText,
           ignoreButtonText: ignoreButtonText,
           intermediateDialogTitle: intermediateDialogTitle,
           intermediateDialogContent: intermediateDialogContent,
@@ -86,7 +84,6 @@ class InAppReviewManager {
     required String ignoreButtonText,
     required Widget? intermediateDialogTitle,
     required Widget? intermediateDialogContent,
-    required String? laterButtonText,
   }) async {
     final InAppReview inAppReview = InAppReview.instance;
 
@@ -96,22 +93,39 @@ class InAppReviewManager {
         context: context,
         builder: (dialogContext) => AlertDialog(
           title: intermediateDialogTitle,
-          content: intermediateDialogContent,
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(_IntermediateDialogState.ignore),
-              child: Text(ignoreButtonText),
-            ),
-            if (laterButtonText != null)
-              TextButton(
-                onPressed: () => Navigator.of(dialogContext).pop(_IntermediateDialogState.later),
-                child: Text(laterButtonText),
-              ),
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(_IntermediateDialogState.rate),
-              child: Text(rateNowButtonText),
-            ),
-          ],
+          content: Column(
+            children: [
+              if (intermediateDialogContent != null) intermediateDialogContent,
+              const SizedBox(height: 32),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        Navigator.of(dialogContext).pop(_IntermediateDialogState.ignore);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 32),
+                        child: Text(ignoreButtonText),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () {
+                        Navigator.of(dialogContext).pop(_IntermediateDialogState.rate);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 32),
+                        child: Text(rateNowButtonText),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       );
 
