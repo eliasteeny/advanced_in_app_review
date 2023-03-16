@@ -86,7 +86,7 @@ class InAppReviewManager {
   }) async {
     final InAppReview inAppReview = InAppReview.instance;
 
-    if (context != null) {
+    if (context != null && context.mounted) {
       _isIntermediateDialogInProgress = true;
       final popValue = await showDialog<_IntermediateDialogState>(
         context: context,
