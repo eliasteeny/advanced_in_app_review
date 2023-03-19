@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -40,10 +38,9 @@ class InAppReviewManager {
   Future<bool> showRateDialogIfMeetsConditions(
     BuildContext? context, {
     required String rateNowButtonText,
-    required String laterButtonText,
     required String ignoreButtonText,
-    required String intermediateDialogTitle,
-    required String intermediateDialogDescription,
+    required Widget? intermediateDialogTitle,
+    required Widget? intermediateDialogContent,
   }) async {
     bool isMeetsConditions = await _shouldShowRateDialog();
 
@@ -52,10 +49,9 @@ class InAppReviewManager {
         _showDialog(
           context,
           rateNowButtonText: rateNowButtonText,
-          laterButtonText: laterButtonText,
           ignoreButtonText: ignoreButtonText,
           intermediateDialogTitle: intermediateDialogTitle,
-          intermediateDialogDescription: intermediateDialogDescription,
+          intermediateDialogContent: intermediateDialogContent,
         );
       });
     }
@@ -81,38 +77,81 @@ class InAppReviewManager {
   }
 
   // Dialog
-
   void _showDialog(
     BuildContext? context, {
     required String rateNowButtonText,
-    required String laterButtonText,
     required String ignoreButtonText,
-    required String intermediateDialogTitle,
-    required String intermediateDialogDescription,
+    required Widget? intermediateDialogTitle,
+    required Widget? intermediateDialogContent,
   }) async {
     final InAppReview inAppReview = InAppReview.instance;
 
-    if (context != null) {
+    if (context != null && context.mounted) {
       _isIntermediateDialogInProgress = true;
       final popValue = await showDialog<_IntermediateDialogState>(
         context: context,
         builder: (dialogContext) => AlertDialog(
-          title: Text(intermediateDialogTitle),
-          content: Text(intermediateDialogDescription),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(_IntermediateDialogState.ignore),
-              child: Text(ignoreButtonText),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(_IntermediateDialogState.later),
-              child: Text(laterButtonText),
-            ),
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(_IntermediateDialogState.rate),
-              child: Text(rateNowButtonText),
-            ),
-          ],
+          title: intermediateDialogTitle,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (intermediateDialogContent != null) intermediateDialogContent,
+              const SizedBox(height: 32),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(
+                          color: Colors.blue,
+                          width: 3,
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.of(dialogContext).pop(_IntermediateDialogState.ignore);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 24),
+                        child: Text(
+                          ignoreButtonText,
+                          style: const TextStyle(
+                            color: Colors.blue,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(
+                          color: Colors.green,
+                          width: 3,
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.of(dialogContext).pop(_IntermediateDialogState.rate);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 24),
+                        child: Text(
+                          rateNowButtonText,
+                          style: const TextStyle(
+                            color: Colors.green,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       );
 
