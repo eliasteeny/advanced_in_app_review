@@ -58,6 +58,11 @@ class AdvancedInAppReview with WidgetsBindingObserver {
     return this;
   }
 
+  AdvancedInAppReview setOnFailed(void Function(Object, StackTrace) onFailed) {
+    _manager.setOnFailed(onFailed);
+    return this;
+  }
+
   _startObserver() {
     _ambiguate(WidgetsBinding.instance)?.addObserver(this);
     _afterLaunch();
